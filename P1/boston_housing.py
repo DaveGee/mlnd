@@ -5,6 +5,7 @@ import numpy as np
 import pylab as pl
 from sklearn import datasets
 from sklearn.tree import DecisionTreeRegressor
+from sklearn import cross_validation
 
 ################################
 ### ADD EXTRA LIBRARIES HERE ###
@@ -63,13 +64,10 @@ def split_data(city_data):
     # Get the features and labels from the Boston housing data
     X, y = city_data.data, city_data.target
 
-    ###################################
-    ### Step 3. YOUR CODE GOES HERE ###
-    ###################################
-    X_train = 0
-    y_train = 0
-    X_test = 0
-    y_test = 0
+    # train_test_split uses ShuffleSplit to shuffle the data first.
+    # If shuffle should be repeatable, use random_state parameter with a fixed value
+    X_train, y_train, X_test, y_test = cross_validation.train_test_split(X, y, test_size=0.3)
+    print np.shape(X_train), np.shape(X_test)
 
     return X_train, y_train, X_test, y_test
 
@@ -200,13 +198,13 @@ def main():
     # Training/Test dataset split
     X_train, y_train, X_test, y_test = split_data(city_data)
 
-#     # Learning Curve Graphs
-#     max_depths = [1,2,3,4,5,6,7,8,9,10]
-#     for max_depth in max_depths:
-#         learning_curve(max_depth, X_train, y_train, X_test, y_test)
-# 
-#     # Model Complexity Graph
-#     model_complexity(X_train, y_train, X_test, y_test)
+    # Learning Curve Graphs
+    max_depths = [1,2,3,4,5,6,7,8,9,10]
+    for max_depth in max_depths:
+        learning_curve(max_depth, X_train, y_train, X_test, y_test)
+
+    # Model Complexity Graph
+    model_complexity(X_train, y_train, X_test, y_test)
 # 
 #     # Tune and predict Model
 #     fit_predict_model(city_data)
