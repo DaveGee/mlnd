@@ -7,6 +7,8 @@ from sklearn import datasets
 from sklearn.tree import DecisionTreeRegressor
 from sklearn import cross_validation
 
+from sklearn.metrics import mean_squared_error
+
 ################################
 ### ADD EXTRA LIBRARIES HERE ###
 ################################
@@ -55,7 +57,7 @@ def performance_metric(label, prediction):
     ###################################
 
     # http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics
-    pass
+    return mean_squared_error(label, prediction)
 
 
 def split_data(city_data):
@@ -66,8 +68,7 @@ def split_data(city_data):
 
     # train_test_split uses ShuffleSplit to shuffle the data first.
     # If shuffle should be repeatable, use random_state parameter with a fixed value
-    X_train, y_train, X_test, y_test = cross_validation.train_test_split(X, y, test_size=0.3)
-    print np.shape(X_train), np.shape(X_test)
+    X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.3)
 
     return X_train, y_train, X_test, y_test
 
@@ -92,17 +93,16 @@ def learning_curve(depth, X_train, y_train, X_test, y_test):
         # Find the performance on the training and testing set
         train_err[i] = performance_metric(y_train[:s], regressor.predict(X_train[:s]))
         test_err[i] = performance_metric(y_test, regressor.predict(X_test))
-
-
+        
     # Plot learning curve graph
-    learning_curve_graph(sizes, train_err, test_err)
+    learning_curve_graph(sizes, train_err, test_err, depth)
 
 
-def learning_curve_graph(sizes, train_err, test_err):
+def learning_curve_graph(sizes, train_err, test_err, depth):
     """Plot training and test error as a function of the training size."""
 
     pl.figure()
-    pl.title('Decision Trees: Performance vs Training Size')
+    pl.title('Decision Trees: Performance vs Training Size (depth=%i)' % depth)
     pl.plot(sizes, test_err, lw=2, label = 'test error')
     pl.plot(sizes, train_err, lw=2, label = 'training error')
     pl.legend()
