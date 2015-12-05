@@ -175,7 +175,7 @@ def fit_predict_model(city_data):
 
     # Fit the learner to the training data
     print "Final Model: "
-    print reg.fit(X, y)
+    reg.fit(X, y)
     print "Best estimator's max_depth: %i" % reg.best_estimator_.max_depth
     
     # Use the model to predict the output of a particular sample
@@ -183,7 +183,18 @@ def fit_predict_model(city_data):
     y = reg.predict(x)
     print "House: " + str(x)
     print "Prediction: " + str(y)
+    
+    # return the max_depth/price couple, so I can compare multiple execution of gridsearch
+    return (reg.best_estimator_.max_depth, y[0])
 
+def plot_data(data):
+    pl.figure()
+    pl.title('House prices in Boston')
+    pl.hist(data, bins=18, label = 'prices')
+    pl.legend()
+    pl.xlabel('Price')
+    pl.ylabel('Frequency')
+    pl.show()
 
 def main():
     """Analyze the Boston housing data. Evaluate and validate the
@@ -192,6 +203,8 @@ def main():
 
     # Load data
     city_data = load_data()
+    # Show data's shape
+    #plot_data(city_data.target)
 
     # Explore the data
     explore_city_data(city_data)
@@ -208,7 +221,14 @@ def main():
     model_complexity(X_train, y_train, X_test, y_test)
  
     # Tune and predict Model
-    fit_predict_model(city_data)
+    # (run it multiple time to have a good view of the model's variation at each iteration) 
+    predicted = [fit_predict_model(city_data) for i in range(1,20)]
+    predicted_md = map(lambda x: x[0], predicted)
+    predicted_prices = map(lambda x: x[1], predicted)
+    
+    print "----"
+    print "max_depth optimal value: {:.2f} (std={:.2f})".format(np.mean(predicted_md), np.std(predicted_md))
+    print "predicted price: {:.2f} (std={:.2f})".format(np.mean(predicted_prices), np.std(predicted_prices))
 
 
 if __name__ == "__main__":
