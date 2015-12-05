@@ -5,9 +5,8 @@ import numpy as np
 import pylab as pl
 from sklearn import datasets
 from sklearn.tree import DecisionTreeRegressor
-from sklearn import cross_validation
-
-from sklearn.metrics import mean_squared_error
+from sklearn import cross_validation, grid_search
+from sklearn.metrics import mean_absolute_error, make_scorer, mean_squared_error, r2_score
 
 ################################
 ### ADD EXTRA LIBRARIES HERE ###
@@ -57,7 +56,7 @@ def performance_metric(label, prediction):
     ###################################
 
     # http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics
-    return mean_squared_error(label, prediction)
+    return mean_absolute_error(label, prediction)
 
 
 def split_data(city_data):
@@ -81,8 +80,7 @@ def learning_curve(depth, X_train, y_train, X_test, y_test):
     train_err = np.zeros(len(sizes))
     test_err = np.zeros(len(sizes))
 
-    print "Decision Tree with Max Depth: "
-    print depth
+    print "Decision Tree with Max Depth: %i" % depth
 
     for i, s in enumerate(sizes):
 
@@ -169,13 +167,16 @@ def fit_predict_model(city_data):
     # 1. Find the best performance metric
     # should be the same as your performance_metric procedure
     # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html
+    scorer = make_scorer(mean_absolute_error, greater_is_better=False)
 
     # 2. Use gridearch to fine tune the Decision Tree Regressor and find the best model
     # http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html#sklearn.grid_search.GridSearchCV
+    reg = grid_search.GridSearchCV(regressor, parameters, scoring=scorer)
 
     # Fit the learner to the training data
     print "Final Model: "
     print reg.fit(X, y)
+    print "Best estimator's max_depth: %i" % reg.best_estimator_.max_depth
     
     # Use the model to predict the output of a particular sample
     x = [11.95, 0.00, 18.100, 0, 0.6590, 5.6090, 90.00, 1.385, 24, 680.0, 20.20, 332.09, 12.13]
@@ -205,9 +206,9 @@ def main():
 
     # Model Complexity Graph
     model_complexity(X_train, y_train, X_test, y_test)
-# 
-#     # Tune and predict Model
-#     fit_predict_model(city_data)
+ 
+    # Tune and predict Model
+    fit_predict_model(city_data)
 
 
 if __name__ == "__main__":
