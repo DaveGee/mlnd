@@ -11,7 +11,7 @@ from sklearn.metrics import mean_absolute_error, make_scorer, mean_squared_error
 ################################
 ### ADD EXTRA LIBRARIES HERE ###
 ################################
-
+scoring_function = mean_absolute_error
 
 def load_data():
     """Load the Boston dataset."""
@@ -56,7 +56,7 @@ def performance_metric(label, prediction):
     ###################################
 
     # http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics
-    return mean_absolute_error(label, prediction)
+    return scoring_function(label, prediction)
 
 
 def split_data(city_data):
@@ -107,6 +107,7 @@ def learning_curve_graph(sizes, train_err, test_err, depth):
     pl.xlabel('Training Size')
     pl.ylabel('Error')
     pl.show()
+    #pl.savefig('out/learn_curv_depth_%i.png' % depth)
 
 
 def model_complexity(X_train, y_train, X_test, y_test):
@@ -147,6 +148,7 @@ def model_complexity_graph(max_depth, train_err, test_err):
     pl.xlabel('Max Depth')
     pl.ylabel('Error')
     pl.show()
+    #pl.savefig('model_complexity.png')
 
 
 def fit_predict_model(city_data):
@@ -167,7 +169,7 @@ def fit_predict_model(city_data):
     # 1. Find the best performance metric
     # should be the same as your performance_metric procedure
     # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html
-    scorer = make_scorer(mean_absolute_error, greater_is_better=False)
+    scorer = make_scorer(scoring_function, greater_is_better=False)
 
     # 2. Use gridearch to fine tune the Decision Tree Regressor and find the best model
     # http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html#sklearn.grid_search.GridSearchCV
@@ -194,7 +196,7 @@ def plot_data(data):
     pl.legend()
     pl.xlabel('Price')
     pl.ylabel('Frequency')
-    pl.show()
+    pl.savefig('data.png')
 
 def main():
     """Analyze the Boston housing data. Evaluate and validate the
