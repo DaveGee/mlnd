@@ -78,12 +78,11 @@ David Geretti - déc. 2015
 
 **Compare prediction to earlier statistics and make a case if you think it is a valid model.**
 
-> With a mean price for the dataset equals to **22.53**, and a standard deviation of **9.19**, the predicted price is at a z-score of 
-
-> $\frac{20.97 - 22.53}{9.19} = 0.17$
+> With a mean price for the dataset equals to **22.53**, and a standard deviation of **9.19**, the predicted price has a z-score of (20.97 - 22.53) / 9.19 = -0.17.
 
 > - the predicted prices is within less than a standard deviation of the mean.
 - the predicted price is very close to the median price of **21.2**
 
+> by comparison to the statistics above, this prices seems to be a valid price.
 
-    
+
