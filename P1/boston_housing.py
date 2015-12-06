@@ -11,7 +11,6 @@ from sklearn.metrics import mean_absolute_error, make_scorer, mean_squared_error
 ################################
 ### ADD EXTRA LIBRARIES HERE ###
 ################################
-scoring_function = mean_absolute_error
 
 def load_data():
     """Load the Boston dataset."""
@@ -56,7 +55,7 @@ def performance_metric(label, prediction):
     ###################################
 
     # http://scikit-learn.org/stable/modules/classes.html#sklearn-metrics-metrics
-    return scoring_function(label, prediction)
+    return mean_absolute_error(label, prediction)
 
 
 def split_data(city_data):
@@ -107,7 +106,7 @@ def learning_curve_graph(sizes, train_err, test_err, depth):
     pl.xlabel('Training Size')
     pl.ylabel('Error')
     pl.show()
-    #pl.savefig('out/learn_curv_depth_%i.png' % depth)
+    #pl.savefig('learn_curv_depth_%i.png' % depth)
 
 
 def model_complexity(X_train, y_train, X_test, y_test):
@@ -169,7 +168,7 @@ def fit_predict_model(city_data):
     # 1. Find the best performance metric
     # should be the same as your performance_metric procedure
     # http://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html
-    scorer = make_scorer(scoring_function, greater_is_better=False)
+    scorer = make_scorer(mean_absolute_error, greater_is_better=False)
 
     # 2. Use gridearch to fine tune the Decision Tree Regressor and find the best model
     # http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html#sklearn.grid_search.GridSearchCV
@@ -186,7 +185,7 @@ def fit_predict_model(city_data):
     print "House: " + str(x)
     print "Prediction: " + str(y)
     
-    # return the max_depth/price couple, so I can compare multiple execution of gridsearch
+    # return the max_depth/price couple, so we can compare multiple execution of gridsearch
     return (reg.best_estimator_.max_depth, y[0])
 
 def plot_data(data):
