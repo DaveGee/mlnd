@@ -176,7 +176,7 @@ def fit_predict_model(city_data):
 
     # Fit the learner to the training data
     print "Final Model: "
-    reg.fit(X, y)
+    print reg.fit(X, y)
     print "Best estimator's max_depth: %i" % reg.best_estimator_.max_depth
     
     # Use the model to predict the output of a particular sample
@@ -220,16 +220,9 @@ def main():
 
     # Model Complexity Graph
     model_complexity(X_train, y_train, X_test, y_test)
- 
+
     # Tune and predict Model
-    # (run it multiple time to have a good view of the model's variation at each iteration) 
-    predicted = [fit_predict_model(city_data) for i in range(1,20)]
-    predicted_md = map(lambda x: x[0], predicted)
-    predicted_prices = map(lambda x: x[1], predicted)
-    
-    print "----"
-    print "max_depth optimal value: {:.2f} (std={:.2f})".format(np.mean(predicted_md), np.std(predicted_md))
-    print "predicted price: {:.2f} (std={:.2f})".format(np.mean(predicted_prices), np.std(predicted_prices))
+    fit_predict_model(city_data)
 
 
 if __name__ == "__main__":
